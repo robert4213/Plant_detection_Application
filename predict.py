@@ -20,17 +20,19 @@ if __name__ == '__main__':
     # np.random.shuffle(photo)
     # np.random.seed(None)
     # for i in range(x):
-    while True:
-        img = input('Input image filename:')
-        # img ='E:/CMPE_master_project/photo/photo/cyclamen/image_00495.jpg'
+    if True:
+        # img = input('Input image filename:')
+        img ='E:/CMPE_master_project/photo/v1780.jpg'
         # print(photo[i])
         try:
             image = Image.open(img)
         except:
             print('Open Error! Try again!')
-            continue
+            # continue
         else:
             # [[type,[x_top,y_left,x_bottom,Y_right]]
+            boxes = yolo.detect_image_boxes(image)
+            print(boxes)
             r_image = yolo.detect_image(image)
             r_image.show()
     yolo.close_session()

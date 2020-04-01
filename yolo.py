@@ -174,5 +174,40 @@ class YOLO(object):
         print(end - start)
         return image
 
+    # ---------------------------------------------------#
+    #   检测图片
+    # ---------------------------------------------------#
+    def detect_image_boxes(self, image):
+        start = timer()
+
+        # 调整图片使其符合输入要求
+        new_image_size = (image.width - (image.width % 32),
+                          image.height - (image.height % 32))
+        boxed_image = letterbox_image(image, new_image_size)
+        image_data = np.array(boxed_image, dtype='float32')
+        image_data /= 255.
+        image_data = np.expand_dims(image_data, 0)  # Add batch dimension.
+
+        # 预测结果
+        out_boxes, out_scores, out_classes = self.sess.run(
+            [self.boxes, self.scores, self.classes],
+            feed_dict={
+                self.yolo_model.input: image_data,
+                self.input_image_shape: [image.size[1], image.size[0]],
+                K.learning_phase(): 0
+            })
+
+        print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
+
+        end = timer()
+        print(end - start)
+
+        res = []
+        for ind,c in enumerate(out_classes):
+            each = [self.class_names[c],out_boxes[ind].astype(int).tolist(),out_scores[ind]]
+            res.append(each)
+        return res
+    
+
     def close_session(self):
         self.sess.close()
