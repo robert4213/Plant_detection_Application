@@ -30,7 +30,7 @@ if __name__ == '__main__':
             print('Open Error! Try again!')
             # continue
         else:
-            # [[type,[x_top,y_left,x_bottom,Y_right]]
+            # [[type,[x_top,y_left,x_bottom,Y_right],score]
             boxes = yolo.detect_image_boxes(image)
             print(boxes)
             r_image = yolo.detect_image(image)
